@@ -26,7 +26,7 @@
     <div class="container py-5">
         <header class="text-center mb-5">
             <h1 class="display-5">🏋️‍♂️ Minimalist Workout Tracker</h1>
-            <p class="lead text-muted">Log your Upper and Lower Body workouts here.</p>
+            <p class="lead text-muted">Log your Upper and Lower Body workouts here. Data is saved automatically.</p>
         </header>
 
         <!-- Upper Body Workout Table -->
@@ -142,6 +142,12 @@
     
     <!-- App Logic Script -->
     <script>
+        const LOCAL_STORAGE_KEY = 'minimalistWorkoutData';
+
+        /**
+         * Reads all workout data from the input fields on the page.
+         * @returns {object} An object containing upperBody and lowerBody workout data.
+         */
         function getWorkoutDataFromPage() {
             const workoutData = { upperBody: [], lowerBody: [] };
             
@@ -167,11 +173,17 @@
             return workoutData;
         }
 
-        function populatePageWithData(workoutData) {
+        /**
+         * Populates the input fields with data from a workout object.
+         * @param {object} workoutData - The workout data object.
+         * @param {boolean} showAlert - Whether to show an alert on success.
+         */
+        function populatePageWithData(workoutData, showAlert = false) {
             if (!workoutData || !workoutData.upperBody || !workoutData.lowerBody) {
-                alert("Import failed: Invalid data format.");
+                if (showAlert) alert("Import failed: Invalid data format.");
                 return;
             }
+
             document.querySelectorAll('#upper-body-card tbody tr').forEach((row, index) => {
                 const rowData = workoutData.upperBody[index];
                 if (rowData) {
@@ -197,9 +209,36 @@
                     if(inputs.length > 5) inputs[5].value = rowData.set3.reps;
                 }
             });
-            alert('Workout data loaded successfully!');
+            if (showAlert) alert('Workout data loaded successfully!');
+        }
+        
+        /**
+         * Saves the current workout data to the browser's local storage.
+         */
+        function saveToLocalStorage() {
+            const workoutData = getWorkoutDataFromPage();
+            localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(workoutData));
         }
 
+        /**
+         * Loads workout data from local storage and populates the page.
+         */
+        function loadFromLocalStorage() {
+            const savedDataJSON = localStorage.getItem(LOCAL_STORAGE_KEY);
+            if (savedDataJSON) {
+                try {
+                    const workoutData = JSON.parse(savedDataJSON);
+                    populatePageWithData(workoutData, false); // Populate silently
+                } catch (error) {
+                    console.error("Error parsing data from local storage:", error);
+                    localStorage.removeItem(LOCAL_STORAGE_KEY); // Clear corrupted data
+                }
+            }
+        }
+
+        /**
+         * Exports the current workout data to a JSON file.
+         */
         function exportToJson() {
             const workoutData = getWorkoutDataFromPage();
             const dataStr = JSON.stringify(workoutData, null, 2);
@@ -215,6 +254,10 @@
             URL.revokeObjectURL(url);
         }
 
+        /**
+         * Imports workout data from a selected JSON file.
+         * @param {Event} event - The file input change event.
+         */
         function importFromJson(event) {
             const file = event.target.files[0];
             if (!file) { return; }
@@ -223,20 +266,37 @@
             reader.onload = function(e) {
                 try {
                     const workoutData = JSON.parse(e.target.result);
-                    populatePageWithData(workoutData);
+                    populatePageWithData(workoutData, true);
+                    saveToLocalStorage(); // Save imported data to make it persistent
                 } catch (error) {
                     alert("Error parsing JSON file: " + error.message);
                 }
             };
             reader.readAsText(file);
-            event.target.value = null;
+            event.target.value = null; // Reset file input
         }
 
+        /**
+         * Clears all input fields and the saved data in local storage.
+         */
         function clearInputs() {
-            if (confirm("Are you sure you want to clear all weights and reps?")) {
+            if (confirm("Are you sure you want to clear all weights and reps? This will also clear your auto-saved data.")) {
                 document.querySelectorAll('input[type="number"]').forEach(input => input.value = '');
+                saveToLocalStorage(); // Save the cleared state
             }
         }
+
+        // --- Initializer ---
+        // Runs when the page content has finished loading.
+        document.addEventListener('DOMContentLoaded', () => {
+            // Load data from local storage on page load
+            loadFromLocalStorage();
+
+            // Add event listeners to all number inputs to auto-save on change
+            document.querySelectorAll('input[type="number"]').forEach(input => {
+                input.addEventListener('input', saveToLocalStorage);
+            });
+        });
     </script>
 </body>
 </html>
