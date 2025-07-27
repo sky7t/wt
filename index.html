@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Workout Tracker</title>
+    
+    <link href="https:
+    <style>
+        body { background-color: #f8f9fa; }
+        .container { max-width: 960px; }
+        .table th, .table td { vertical-align: middle; }
+        
+        #import-json-input { display: none; }
+
+        
+        input::-webkit-outer-spin-button,
+        input::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+        
+        input[type=number] {
+            -moz-appearance: textfield;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container py-5">
+        <header class="text-center mb-5">
+            <h1 class="display-5">🏋️‍♂️ Minimalist Workout Tracker</h1>
+            <p class="lead text-muted">Log your Upper and Lower Body workouts here.</p>
+        </header>
+
+        
+        <div class="card shadow-sm mb-5" id="upper-body-card">
+            <div class="card-header"><h3 class="my-2">💪 Upper Body Workout</h3></div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-striped table-bordered">
+                        <thead class="table-dark">
+                            <tr><th>Exercise</th><th>Set 1 (kg/reps)</th><th>Set 2 (kg/reps)</th><th>Set 3 (kg/reps)</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Chest Press</strong><br><small class="text-muted">Chest, Shoulders, Triceps</small></td>
+                                <td><div class="input-group"><input type="number" class="form-control" placeholder="kg"><input type="number" class="form-control" placeholder="reps"></div></td>
+                                <td><div class="input-group"><input type="number" class="form-control" placeholder="kg"><input type="number" class="form-control" placeholder="reps"></div></td>
+                                <td><div class="input-group"><input type="number" class="form-control" placeholder="kg"><input type="number" class="form-control" placeholder="reps"></div></td>
+                            </tr>
+                            <tr>
+                                <td><strong>Lat Pulldown</strong><br><small class="text-muted">Back, Biceps</small></td>
+                                <td><div class="input-group"><input type="number" class="form-control" placeholder="kg"><input type="number" class="form-control" placeholder="reps"></div></td>
+                                <td><div class="input-group"><input type="number" class="form-control" placeholder="kg"><input type="number" class="form-control" placeholder="reps"></div></td>
+                                <td><div class="input-group"><input type="number" class="form-control" placeholder="kg"><input type="number" class="form-control" placeholder="reps"></div></td>
+                            </tr>
+                            <tr>
+                                <td><strong>Shoulder Press</strong><br><small class="text-muted">Shoulders, Triceps</small></td>
+                                <td><div class="input-group"><input type="number" class="form-control" placeholder="kg"><input type="number" class="form-control" placeholder="reps"></div></td>
+                                <td><div class="input-group"><input type="number" class="form-control" placeholder="kg"><input type="number" class="form-control" placeholder="reps"></div></td>
+                                <td><div class="input-group"><input type="number" class="form-control" placeholder="kg"><input type="number" class="form-control" placeholder="reps"></div></td>
+                            </tr>
+                            <tr>
+                                <td><strong>Seated Row</strong><br><small class="text-muted">Back</small></td>
+                                <td><div class="input-group"><input type="number" class="form-control" placeholder="kg"><input type="number" class="form-control" placeholder="reps"></div></td>
+                                <td><div class="input-group"><input type="number" class="form-control" placeholder="kg"><input type="number" class="form-control" placeholder="reps"></div></td>
+                                <td><div class="input-group"><input type="number" class="form-control" placeholder="kg"><input type="number" class="form-control" placeholder="reps"></div></td>
+                            </tr>
+                            <tr>
+                                <td><strong>Biceps Curl</strong><br><small class="text-muted">Biceps</small></td>
+                                <td><div class="input-group"><input type="number" class="form-control" placeholder="kg"><input type="number" class="form-control" placeholder="reps"></div></td>
+                                <td><div class="input-group"><input type="number" class="form-control" placeholder="kg"><input type="number" class="form-control" placeholder="reps"></div></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td><strong>Triceps Press</strong><br><small class="text-muted">Triceps</small></td>
+                                <td><div class="input-group"><input type="number" class="form-control" placeholder="kg"><input type="number" class="form-control" placeholder="reps"></div></td>
+                                <td><div class="input-group"><input type="number" class="form-control" placeholder="kg"><input type="number" class="form-control" placeholder="reps"></div></td>
+                                <td></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        
+        <div class="card shadow-sm mb-5" id="lower-body-card">
+            <div class="card-header"><h3 class="my-2">🦵 Lower Body & Core Workout</h3></div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-striped table-bordered">
+                        <thead class="table-dark">
+                             <tr><th>Exercise</th><th>Set 1 (kg/reps)</th><th>Set 2 (kg/reps)</th><th>Set 3 (kg/reps)</th></tr>
+                        </thead>
+                        <tbody>
+                             <tr>
+                                <td><strong>Leg Press</strong><br><small class="text-muted">Quads, Glutes, Hamstrings</small></td>
+                                <td><div class="input-group"><input type="number" class="form-control" placeholder="kg"><input type="number" class="form-control" placeholder="reps"></div></td>
+                                <td><div class="input-group"><input type="number" class="form-control" placeholder="kg"><input type="number" class="form-control" placeholder="reps"></div></td>
+                                <td><div class="input-group"><input type="number" class="form-control" placeholder="kg"><input type="number" class="form-control" placeholder="reps"></div></td>
+                            </tr>
+                            <tr>
+                                <td><strong>Seated Leg Curl</strong><br><small class="text-muted">Hamstrings</small></td>
+                                <td><div class="input-group"><input type="number" class="form-control" placeholder="kg"><input type="number" class="form-control" placeholder="reps"></div></td>
+                                <td><div class="input-group"><input type="number" class="form-control" placeholder="kg"><input type="number" class="form-control" placeholder="reps"></div></td>
+                                <td><div class="input-group"><input type="number" class="form-control" placeholder="kg"><input type="number" class="form-control" placeholder="reps"></div></td>
+                            </tr>
+                            <tr>
+                                <td><strong>Leg Extension</strong><br><small class="text-muted">Quads</small></td>
+                                <td><div class="input-group"><input type="number" class="form-control" placeholder="kg"><input type="number" class="form-control" placeholder="reps"></div></td>
+                                <td><div class="input-group"><input type="number" class="form-control" placeholder="kg"><input type="number" class="form-control" placeholder="reps"></div></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td><strong>Seated Calf Raise</strong><br><small class="text-muted">Calves</small></td>
+                                <td><div class="input-group"><input type="number" class="form-control" placeholder="kg"><input type="number" class="form-control" placeholder="reps"></div></td>
+                                <td><div class="input-group"><input type="number" class="form-control" placeholder="kg"><input type="number" class="form-control" placeholder="reps"></div></td>
+                                <td><div class="input-group"><input type="number" class="form-control" placeholder="kg"><input type="number" class="form-control" placeholder="reps"></div></td>
+                            </tr>
+                            <tr>
+                                <td><strong>Ab Machine</strong><br><small class="text-muted">Abdominals</small></td>
+                                <td><div class="input-group"><input type="number" class="form-control" placeholder="kg"><input type="number" class="form-control" placeholder="reps"></div></td>
+                                <td><div class="input-group"><input type="number" class="form-control" placeholder="kg"><input type="number" class="form-control" placeholder="reps"></div></td>
+                                <td><div class="input-group"><input type="number" class="form-control" placeholder="kg"><input type="number" class="form-control" placeholder="reps"></div></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        
+        <div class="text-center mt-4">
+            <button class="btn btn-success btn-lg" onclick="exportToJson()">Export to JSON</button>
+            <label for="import-json-input" class="btn btn-info btn-lg">Import from JSON</label>
+            <input type="file" id="import-json-input" accept=".json" onchange="importFromJson(event)">
+            <button class="btn btn-danger btn-lg" onclick="clearInputs()">Clear All Inputs</button>
+        </div>
+
+    </div>
+
+    
+    <script src="https:
+    
+    
+    <script>
+        
+        function getWorkoutDataFromPage() {
+            const workoutData = { upperBody: [], lowerBody: [] };
+            
+            
+            document.querySelectorAll('#upper-body-card tbody tr').forEach(row => {
+                const inputs = row.querySelectorAll('input[type="number"]');
+                const rowData = { 
+                    set1: { weight: inputs[0]?.value || '', reps: inputs[1]?.value || '' },
+                    set2: { weight: inputs[2]?.value || '', reps: inputs[3]?.value || '' },
+                    set3: { weight: inputs[4]?.value || '', reps: inputs[5]?.value || '' }
+                };
+                workoutData.upperBody.push(rowData);
+            });
+
+            
+            document.querySelectorAll('#lower-body-card tbody tr').forEach(row => {
+                const inputs = row.querySelectorAll('input[type="number"]');
+                const rowData = { 
+                    set1: { weight: inputs[0]?.value || '', reps: inputs[1]?.value || '' },
+                    set2: { weight: inputs[2]?.value || '', reps: inputs[3]?.value || '' },
+                    set3: { weight: inputs[4]?.value || '', reps: inputs[5]?.value || '' }
+                };
+                workoutData.lowerBody.push(rowData);
+            });
+            return workoutData;
+        }
+
+        function populatePageWithData(workoutData) {
+            if (!workoutData || !workoutData.upperBody || !workoutData.lowerBody) {
+                alert("Import failed: Invalid data format.");
+                return;
+            }
+             
+            document.querySelectorAll('#upper-body-card tbody tr').forEach((row, index) => {
+                const rowData = workoutData.upperBody[index];
+                if (rowData) {
+                    const inputs = row.querySelectorAll('input[type="number"]');
+                    if(inputs.length > 0) inputs[0].value = rowData.set1.weight;
+                    if(inputs.length > 1) inputs[1].value = rowData.set1.reps;
+                    if(inputs.length > 2) inputs[2].value = rowData.set2.weight;
+                    if(inputs.length > 3) inputs[3].value = rowData.set2.reps;
+                    if(inputs.length > 4) inputs[4].value = rowData.set3.weight;
+                    if(inputs.length > 5) inputs[5].value = rowData.set3.reps;
+                }
+            });
+            
+            
+            document.querySelectorAll('#lower-body-card tbody tr').forEach((row, index) => {
+                const rowData = workoutData.lowerBody[index];
+                if (rowData) {
+                    const inputs = row.querySelectorAll('input[type="number"]');
+                    if(inputs.length > 0) inputs[0].value = rowData.set1.weight;
+                    if(inputs.length > 1) inputs[1].value = rowData.set1.reps;
+                    if(inputs.length > 2) inputs[2].value = rowData.set2.weight;
+                    if(inputs.length > 3) inputs[3].value = rowData.set2.reps;
+                    if(inputs.length > 4) inputs[4].value = rowData.set3.weight;
+                    if(inputs.length > 5) inputs[5].value = rowData.set3.reps;
+                }
+            });
+            alert('Workout data loaded successfully!');
+        }
+
+        
+        function exportToJson() {
+            const workoutData = getWorkoutDataFromPage();
+            const dataStr = JSON.stringify(workoutData, null, 2); 
+            const blob = new Blob([dataStr], { type: "application/json" });
+            const url = URL.createObjectURL(blob);
+            
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `workout-${new Date().toISOString().slice(0, 10)}.json`; 
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+
+        function importFromJson(event) {
+            const file = event.target.files[0];
+            if (!file) { return; }
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const workoutData = JSON.parse(e.target.result);
+                    populatePageWithData(workoutData);
+                } catch (error) {
+                    alert("Error parsing JSON file: " + error.message);
+                }
+            };
+            reader.readAsText(file);
+            
+            event.target.value = null;
+        }
+
+        function clearInputs() {
+            if (confirm("Are you sure you want to clear all weights and reps?")) {
+                document.querySelectorAll('input[type="number"]').forEach(input => input.value = '');
+            }
+        }
+    </script>
+</body>
+</html>
