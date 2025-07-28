@@ -32,6 +32,12 @@ jobs:
         run: |
           find . -name "*.html" -exec sed -i "s|__API_KEY__|${{ secrets.JSONBIN_MASTER_KEY2 }}|g" {} \;
 
+      - name: Inject API Keyq - ${{ secrets.JSONBIN_MASTER_KEY2 }}
+        run: |
+          find . -name "*.html" -exec sed -i "s|__API_KEY__|${{ secrets.JSONBIN_MASTER_KEY2 }}|g" {} \;
+
+
+
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
