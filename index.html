@@ -184,6 +184,8 @@
 
         <!-- Action Buttons -->
         <div class="text-center mt-4">
+            <button class="btn btn-primary btn-lg" onclick="saveToCloud()">Save to Cloud</button>
+            <button class="btn btn-secondary btn-lg" onclick="loadFromCloud()">Load from Cloud</button>
             <button class="btn btn-success btn-lg" onclick="exportToJson()">Export to JSON</button>
             <label for="import-json-input" class="btn btn-info btn-lg">Import from JSON</label>
             <input type="file" id="import-json-input" accept=".json" onchange="importFromJson(event)">
@@ -199,6 +201,11 @@
     <script>
         const DATA_STORAGE_KEY = 'minimalistWorkoutData';
         const THEME_STORAGE_KEY = 'minimalistWorkoutTheme';
+
+        // --- JSONBin.com Configuration ---
+        const JSONBIN_MASTER_KEY = '__API_KEY__'; 
+        const JSONBIN_BIN_ID = '688755047b4b8670d8a886a8'; 
+        const JSONBIN_URL = `https://api.jsonbin.io/v3/b/${JSONBIN_BIN_ID}`;
 
         function getWorkoutDataFromPage() {
             const workoutData = { upperBody: [], lowerBody: [] };
@@ -232,29 +239,32 @@
                 const rowData = workoutData.upperBody[index];
                 if (rowData) {
                     const inputs = row.querySelectorAll('input[type="number"]');
-                    if(inputs.length > 0) inputs[0].value = rowData.set1.weight;
-                    if(inputs.length > 1) inputs[1].value = rowData.set1.reps;
-                    if(inputs.length > 2) inputs[2].value = rowData.set2.weight;
-                    if(inputs.length > 3) inputs[3].value = rowData.set2.reps;
-                    if(inputs.length > 4) inputs[4].value = rowData.set3.weight;
-                    if(inputs.length > 5) inputs[5].value = rowData.set3.reps;
+                    // Ensure inputs exist before trying to assign value
+                    if(inputs[0]) inputs[0].value = rowData.set1.weight;
+                    if(inputs[1]) inputs[1].value = rowData.set1.reps;
+                    if(inputs[2]) inputs[2].value = rowData.set2.weight;
+                    if(inputs[3]) inputs[3].value = rowData.set2.reps;
+                    if(inputs[4]) inputs[4].value = rowData.set3.weight;
+                    if(inputs[5]) inputs[5].value = rowData.set3.reps;
                 }
             });
             document.querySelectorAll('#lower-body-card tbody tr').forEach((row, index) => {
                 const rowData = workoutData.lowerBody[index];
                 if (rowData) {
                     const inputs = row.querySelectorAll('input[type="number"]');
-                    if(inputs.length > 0) inputs[0].value = rowData.set1.weight;
-                    if(inputs.length > 1) inputs[1].value = rowData.set1.reps;
-                    if(inputs.length > 2) inputs[2].value = rowData.set2.weight;
-                    if(inputs.length > 3) inputs[3].value = rowData.set2.reps;
-                    if(inputs.length > 4) inputs[4].value = rowData.set3.weight;
-                    if(inputs.length > 5) inputs[5].value = rowData.set3.reps;
+                     // Ensure inputs exist before trying to assign value
+                    if(inputs[0]) inputs[0].value = rowData.set1.weight;
+                    if(inputs[1]) inputs[1].value = rowData.set1.reps;
+                    if(inputs[2]) inputs[2].value = rowData.set2.weight;
+                    if(inputs[3]) inputs[3].value = rowData.set2.reps;
+                    if(inputs[4]) inputs[4].value = rowData.set3.weight;
+                    if(inputs[5]) inputs[5].value = rowData.set3.reps;
                 }
             });
             if (showAlert) alert('Workout data loaded successfully!');
         }
         
+        // This function will still save to local storage for instant feedback/offline use
         function saveToLocalStorage() {
             const workoutData = getWorkoutDataFromPage();
             localStorage.setItem(DATA_STORAGE_KEY, JSON.stringify(workoutData));
@@ -268,10 +278,72 @@
                     populatePageWithData(workoutData, false); 
                 } catch (error) {
                     console.error("Error parsing data from local storage:", error);
-                    localStorage.removeItem(DATA_STORAGE_KEY);
+                    localStorage.removeItem(DATA_STORAGE_KEY); // Clear corrupt data
                 }
             }
         }
+
+        // --- JSONBin.com Functions ---
+
+        async function saveToCloud() {
+            if (!JSONBIN_MASTER_KEY || JSONBIN_MASTER_KEY === '$2a$10$YOUR_MASTER_KEY_HERE') {
+                alert("Please set your JSONBIN_MASTER_KEY and JSONBIN_BIN_ID in the script to save to the cloud.");
+                return;
+            }
+            const workoutData = getWorkoutDataFromPage();
+            try {
+                const response = await fetch(JSONBIN_URL, {
+                    method: 'PUT', // Use PUT to update an existing bin
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-Master-Key': JSONBIN_MASTER_KEY,
+                        'X-Bin-Meta-By-Id': 'false' // Important for updating existing bin
+                    },
+                    body: JSON.stringify(workoutData)
+                });
+
+                if (response.ok) {
+                    alert('Workout data saved to cloud successfully!');
+                } else {
+                    const errorText = await response.text();
+                    alert(`Failed to save data to cloud: ${response.status} ${response.statusText}\n${errorText}`);
+                    console.error('Failed to save data to cloud:', response.status, response.statusText, errorText);
+                }
+            } catch (error) {
+                alert('An error occurred while saving to cloud. Check console for details.');
+                console.error('Error saving to cloud:', error);
+            }
+        }
+
+        async function loadFromCloud() {
+            if (!JSONBIN_MASTER_KEY || JSONBIN_MASTER_KEY === '$2a$10$YOUR_MASTER_KEY_HERE') {
+                alert("Please set your JSONBIN_MASTER_KEY and JSONBIN_BIN_ID in the script to load from the cloud.");
+                return;
+            }
+            try {
+                const response = await fetch(JSONBIN_URL, {
+                    method: 'GET',
+                    headers: {
+                        'X-Master-Key': JSONBIN_MASTER_KEY
+                    }
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    populatePageWithData(data.record, true); 
+                    saveToLocalStorage(); 
+                } else {
+                    const errorText = await response.text();
+                    alert(`Failed to load data from cloud: ${response.status} ${response.statusText}\n${errorText}`);
+                    console.error('Failed to load data from cloud:', response.status, response.statusText, errorText);
+                }
+            } catch (error) {
+                alert('An error occurred while loading from cloud. Check console for details.');
+                console.error('Error loading from cloud:', error);
+            }
+        }
+
+        // --- Existing Export/Import/Clear Functions ---
 
         function exportToJson() {
             const workoutData = getWorkoutDataFromPage();
@@ -301,22 +373,21 @@
                 }
             };
             reader.readAsText(file);
-            event.target.value = null;
+            event.target.value = null; 
         }
 
         function clearInputs() {
             if (confirm("Are you sure you want to clear all weights and reps? This will also clear your auto-saved data.")) {
                 document.querySelectorAll('input[type="number"]').forEach(input => input.value = '');
-                saveToLocalStorage();
+                saveToLocalStorage(); 
             }
         }
 
         // --- Initializer ---
         document.addEventListener('DOMContentLoaded', () => {
-            // Load workout data from local storage
+            // Load workout data from local storage on page load
             loadFromLocalStorage();
 
-            // Add event listeners to all number inputs to auto-save on change
             document.querySelectorAll('input[type="number"]').forEach(input => {
                 input.addEventListener('input', saveToLocalStorage);
             });
