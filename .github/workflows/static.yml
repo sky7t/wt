@@ -3,8 +3,14 @@ name: Deploy static content to Pages
 
 on:
   push:
-    branches: ["main"]
+    branches:
+      - main
   workflow_dispatch:
+    inputs:
+      logLevel:
+        description: 'Log level'
+        required: true
+        default: 'warning'
 
 permissions:
   contents: read
@@ -21,22 +27,17 @@ jobs:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
+
     steps:
-      - name: Checkout
+      - name: Checkout repository
         uses: actions/checkout@v4
 
       - name: Setup Pages
         uses: actions/configure-pages@v5
 
-      - name: Inject API Key
+      - name: Inject API Key into HTML
         run: |
           find . -name "*.html" -exec sed -i "s|__API_KEY__|${{ secrets.JSONBIN_MASTER_KEY2 }}|g" {} \;
-
-      - name: Inject API Keyq - ${{ secrets.JSONBIN_MASTER_KEY2 }}
-        run: |
-          find . -name "*.html" -exec sed -i "s|__API_KEY__|${{ secrets.JSONBIN_MASTER_KEY2 }}|g" {} \;
-
-
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
