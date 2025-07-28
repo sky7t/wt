@@ -68,6 +68,11 @@
             border-color: #0dcaf0;
             color: #000;
         }
+        /* Style for the API key warning */
+        #apiKeyWarning {
+            margin-top: 1rem;
+            display: none; /* Hidden by default */
+        }
     </style>
 </head>
 <body>
@@ -83,6 +88,12 @@
             <h1 class="display-5">🏋️‍♂️ Minimalist Workout Tracker</h1>
             <p class="lead text-muted">Log your Upper and Lower Body workouts here. Data is saved automatically.</p>
         </header>
+
+        <!-- API Key Warning Message -->
+        <div id="apiKeyWarning" class="alert alert-warning text-center" role="alert">
+            <strong>Warning:</strong> JSONBin.com API keys are not configured. Cloud Save/Load will not work.
+            Please edit `JSONBIN_MASTER_KEY` and `JSONBIN_BIN_ID` in the script.
+        </div>
 
         <!-- Upper Body Workout Table -->
         <div class="card shadow-sm mb-5" id="upper-body-card">
@@ -195,7 +206,7 @@
     </div>
 
     <!-- Bootstrap JS Bundle -->
-    <script src="https://cdn.jsdelivr.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 
     <!-- App Logic Script -->
     <script>
@@ -203,9 +214,33 @@
         const THEME_STORAGE_KEY = 'minimalistWorkoutTheme';
 
         // --- JSONBin.com Configuration ---
-        const JSONBIN_MASTER_KEY = '__API_KEY__'; 
-        const JSONBIN_BIN_ID = '688755047b4b8670d8a886a8'; 
+        // IMPORTANT: Replace with your actual Master Key and Bin ID from JSONBin.com
+        // Go to jsonbin.io, create an account, create a new bin, and get your keys.
+        // Make sure the bin is 'private' and 'updatable'.
+        const JSONBIN_MASTER_KEY = '__API_KEY__'; // <-- REPLACE THIS
+        const JSONBIN_BIN_ID = '688755047b4b8670d8a886a8';       // <-- REPLACE THIS
         const JSONBIN_URL = `https://api.jsonbin.io/v3/b/${JSONBIN_BIN_ID}`;
+
+        // Flag to check if API keys are configured
+        let areApiKeysConfigured = false;
+
+        function checkApiKeysConfiguration() {
+            const warningElement = document.getElementById('apiKeyWarning');
+            if (JSONBIN_MASTER_KEY === '__API_KEY__' || JSONBIN_BIN_ID === '688755047b4b8670d8a886a8') {
+                areApiKeysConfigured = false;
+                warningElement.style.display = 'block'; // Show the warning
+                console.warn("JSONBin.com API Warning: Please update JSONBIN_MASTER_KEY and JSONBIN_BIN_ID in the script to enable cloud sync. Current values are placeholders.");
+                console.warn("Current JSONBIN_MASTER_KEY:", JSONBIN_MASTER_KEY);
+                console.warn("Current JSONBIN_BIN_ID:", JSONBIN_BIN_ID);
+                return false;
+            } else {
+                areApiKeysConfigured = true;
+                warningElement.style.display = 'none'; // Hide the warning
+                console.info("JSONBin.com API Keys configured. Cloud Save/Load should work.");
+                return true;
+            }
+        }
+
 
         function getWorkoutDataFromPage() {
             const workoutData = { upperBody: [], lowerBody: [] };
@@ -233,6 +268,7 @@
         function populatePageWithData(workoutData, showAlert = false) {
             if (!workoutData || !workoutData.upperBody || !workoutData.lowerBody) {
                 if (showAlert) alert("Import failed: Invalid data format.");
+                console.error("Invalid workout data format:", workoutData);
                 return;
             }
             document.querySelectorAll('#upper-body-card tbody tr').forEach((row, index) => {
@@ -276,22 +312,29 @@
                 try {
                     const workoutData = JSON.parse(savedDataJSON);
                     populatePageWithData(workoutData, false);
+                    console.log("Workout data loaded from local storage.");
                 } catch (error) {
                     console.error("Error parsing data from local storage:", error);
                     localStorage.removeItem(DATA_STORAGE_KEY); // Clear corrupt data
+                    alert("Corrupted local data found and cleared. Please re-enter or load from cloud/JSON.");
                 }
+            } else {
+                console.log("No workout data found in local storage.");
             }
         }
 
         // --- JSONBin.com Functions ---
 
         async function saveToCloud() {
-            if (!JSONBIN_MASTER_KEY || JSONBIN_MASTER_KEY === '__API_KEY__' || !JSONBIN_BIN_ID || JSONBIN_BIN_ID === '688755047b4b8670d8a886a8') {
-                alert("Please set your JSONBIN_MASTER_KEY and JSONBIN_BIN_ID in the script to save to the cloud.");
+            if (!checkApiKeysConfiguration()) {
+                alert("Cloud Save failed: JSONBin.com API keys are not configured. Please see console for details.");
                 return;
             }
             const workoutData = getWorkoutDataFromPage();
             try {
+                console.log("Attempting to save data to JSONBin.com...");
+                console.log("URL:", JSONBIN_URL);
+                console.log("Master Key (first 5 chars):", JSONBIN_MASTER_KEY.substring(0, 5) + '...');
                 const response = await fetch(JSONBIN_URL, {
                     method: 'PUT', // Use PUT to update an existing bin
                     headers: {
@@ -304,6 +347,7 @@
 
                 if (response.ok) {
                     alert('Workout data saved to cloud successfully!');
+                    console.log("Successfully saved to JSONBin.com.");
                 } else {
                     const errorText = await response.text();
                     alert(`Failed to save data to cloud: ${response.status} ${response.statusText}\n${errorText}`);
@@ -316,11 +360,14 @@
         }
 
         async function loadFromCloud() {
-            if (!JSONBIN_MASTER_KEY || JSONBIN_MASTER_KEY === '__API_KEY__' || !JSONBIN_BIN_ID || JSONBIN_BIN_ID === '688755047b4b8670d8a886a8') {
-                alert("Please set your JSONBIN_MASTER_KEY and JSONBIN_BIN_ID in the script to load from the cloud.");
+            if (!checkApiKeysConfiguration()) {
+                alert("Cloud Load failed: JSONBin.com API keys are not configured. Please see console for details.");
                 return;
             }
             try {
+                console.log("Attempting to load data from JSONBin.com...");
+                console.log("URL:", JSONBIN_URL);
+                console.log("Master Key (first 5 chars):", JSONBIN_MASTER_KEY.substring(0, 5) + '...');
                 const response = await fetch(JSONBIN_URL, {
                     method: 'GET',
                     headers: {
@@ -330,8 +377,14 @@
 
                 if (response.ok) {
                     const data = await response.json();
-                    populatePageWithData(data.record, true);
-                    saveToLocalStorage();
+                    if (data && data.record) {
+                        populatePageWithData(data.record, true);
+                        saveToLocalStorage(); // Also save loaded data to local storage
+                        console.log("Successfully loaded from JSONBin.com.");
+                    } else {
+                        alert("Cloud Load failed: No 'record' found in the response or data is empty.");
+                        console.error("Cloud Load failed: Invalid data structure from JSONBin.com", data);
+                    }
                 } else {
                     const errorText = await response.text();
                     alert(`Failed to load data from cloud: ${response.status} ${response.statusText}\n${errorText}`);
@@ -357,6 +410,7 @@
             a.click();
             document.body.removeChild(a);
             URL.revokeObjectURL(url);
+            alert("Workout data exported to JSON file.");
         }
 
         function importFromJson(event) {
@@ -368,26 +422,33 @@
                     const workoutData = JSON.parse(e.target.result);
                     populatePageWithData(workoutData, true);
                     saveToLocalStorage();
+                    alert("Workout data imported from JSON file successfully!");
                 } catch (error) {
                     alert("Error parsing JSON file: " + error.message);
+                    console.error("Error parsing JSON file during import:", error);
                 }
             };
             reader.readAsText(file);
-            event.target.value = null;
+            event.target.value = null; // Clear the file input
         }
 
         function clearInputs() {
-            if (confirm("Are you sure you want to clear all weights and reps? This will also clear your auto-saved data.")) {
+            if (confirm("Are you sure you want to clear all weights and reps? This will also clear your auto-saved data in local storage.")) {
                 document.querySelectorAll('input[type="number"]').forEach(input => input.value = '');
-                saveToLocalStorage();
+                saveToLocalStorage(); // Save empty data to local storage
+                alert("All inputs cleared and local data reset.");
             }
         }
 
         // --- Initializer ---
         document.addEventListener('DOMContentLoaded', () => {
+            // Check API keys and show/hide warning on load
+            checkApiKeysConfiguration();
+
             // Load workout data from local storage on page load
             loadFromLocalStorage();
 
+            // Add event listeners for input changes to auto-save
             document.querySelectorAll('input[type="number"]').forEach(input => {
                 input.addEventListener('input', saveToLocalStorage);
             });
