@@ -1,22 +1,32 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>🏋️‍♂️ Workout Tracker</title>
-    <!-- Browser Tab Icon (Favicon) -->
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>✨</text></svg>">
-    <!-- Bootstrap CSS from CDN -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>✨</text></svg>" />
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+        rel="stylesheet"
+        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
+        crossorigin="anonymous"
+    />
     <style>
-        /* Light Mode (Default) */
         body {
             background-color: #f8f9fa;
             transition: background-color 0.3s, color 0.3s;
         }
-        .container { max-width: 960px; position: relative; }
-        .table th, .table td { vertical-align: middle; }
-        #import-json-input { display: none; }
+        .container {
+            max-width: 960px;
+            position: relative;
+        }
+        .table th,
+        .table td {
+            vertical-align: middle;
+        }
+        #import-json-input {
+            display: none;
+        }
         input::-webkit-outer-spin-button,
         input::-webkit-inner-spin-button {
             -webkit-appearance: none;
@@ -25,13 +35,10 @@
         input[type=number] {
             -moz-appearance: textfield;
         }
-
-        /* Dark Mode Styles */
         body.dark-mode {
             background-color: #212529;
             color: #dee2e6;
         }
-        /* Fix for dark titles on dark background */
         body.dark-mode h1,
         body.dark-mode h3 {
             color: #dee2e6;
@@ -68,244 +75,892 @@
             border-color: #0dcaf0;
             color: #000;
         }
-        /* Style for the API key warning */
         #apiKeyWarning {
             margin-top: 1rem;
-            display: none; /* Hidden by default */
+            display: none;
         }
     </style>
 </head>
 <body>
-
     <div class="container py-5">
-        <!-- Dark Mode Toggle -->
         <div class="form-check form-switch position-absolute top-0 end-0 m-3 p-2">
-            <input class="form-check-input" type="checkbox" role="switch" id="darkModeSwitch" style="cursor: pointer;">
-            <label class="form-check-label" for="darkModeSwitch" style="cursor: pointer;">🌙</label>
+            <input
+                class="form-check-input"
+                type="checkbox"
+                role="switch"
+                id="darkModeSwitch"
+                style="cursor: pointer"
+            />
+            <label class="form-check-label" for="darkModeSwitch" style="cursor: pointer"
+                >🌙</label
+            >
         </div>
-
         <header class="text-center mb-5">
             <h1 class="display-5">🏋️‍♂️ Minimalist Workout Tracker</h1>
-            <p class="lead text-muted">Log your Upper and Lower Body workouts here. Data is saved automatically.</p>
+            <p class="lead text-muted">
+                Log your Upper and Lower Body workouts here. Data is saved
+                automatically.
+            </p>
         </header>
-
-        <!-- API Key Warning Message -->
-        <div id="apiKeyWarning" class="alert alert-warning text-center" role="alert">
-            <strong>Warning:</strong> JSONBin.com API keys are not configured. Cloud Save/Load will not work.
-            Please edit `JSONBIN_MASTER_KEY` and `JSONBIN_BIN_ID` in the script.
+        <div
+            id="apiKeyWarning"
+            class="alert alert-warning text-center"
+            role="alert"
+        >
+            <strong>Warning:</strong> JSONBin.com API keys are not configured.
+            Cloud Save/Load will not work. Please edit `JSONBIN_MASTER_KEY`
+            and `JSONBIN_BIN_ID` in the script.
         </div>
-
-        <!-- Upper Body Workout Table -->
         <div class="card shadow-sm mb-5" id="upper-body-card">
-            <div class="card-header"><h3 class="my-2">💪 Upper Body Workout</h3></div>
+            <div class="card-header">
+                <h3 class="my-2">💪 Upper Body Workout</h3>
+            </div>
             <div class="card-body">
                 <div class="table-responsive">
                     <table class="table table-striped table-bordered">
                         <thead class="table-dark">
-                            <tr><th>Exercise</th><th>Set 1 (kg/reps)</th><th>Set 2 (kg/reps)</th><th>Set 3 (kg/reps)</th></tr>
+                            <tr>
+                                <th>Exercise</th>
+                                <th>Set 1 (kg/reps)</th>
+                                <th>Set 2 (kg/reps)</th>
+                                <th>Set 3 (kg/reps)</th>
+                            </tr>
                         </thead>
                         <tbody>
                             <tr>
-                                <td><strong>Chest Press</strong><br><small class="text-muted">Chest, Shoulders, Triceps</small></td>
-                                <td><div class="d-flex flex-column flex-sm-row gap-1"><input type="number" class="form-control" placeholder="kg" aria-label="Chest Press Set 1 Weight" inputmode="decimal"><input type="number" class="form-control" placeholder="reps" aria-label="Chest Press Set 1 Reps" inputmode="decimal"></div></td>
-                                <td><div class="d-flex flex-column flex-sm-row gap-1"><input type="number" class="form-control" placeholder="kg" aria-label="Chest Press Set 2 Weight" inputmode="decimal"><input type="number" class="form-control" placeholder="reps" aria-label="Chest Press Set 2 Reps" inputmode="decimal"></div></td>
-                                <td><div class="d-flex flex-column flex-sm-row gap-1"><input type="number" class="form-control" placeholder="kg" aria-label="Chest Press Set 3 Weight" inputmode="decimal"><input type="number" class="form-control" placeholder="reps" aria-label="Chest Press Set 3 Reps" inputmode="decimal"></div></td>
+                                <td>
+                                    <strong>Chest Press</strong><br /><small
+                                        class="text-muted"
+                                        >Chest, Shoulders, Triceps</small
+                                    >
+                                </td>
+                                <td>
+                                    <div
+                                        class="d-flex flex-column flex-sm-row gap-1"
+                                    >
+                                        <input
+                                            type="number"
+                                            class="form-control"
+                                            placeholder="kg"
+                                            aria-label="Chest Press Set 1 Weight"
+                                            inputmode="decimal"
+                                        />
+                                        <input
+                                            type="number"
+                                            class="form-control"
+                                            placeholder="reps"
+                                            aria-label="Chest Press Set 1 Reps"
+                                            inputmode="decimal"
+                                        />
+                                    </div>
+                                </td>
+                                <td>
+                                    <div
+                                        class="d-flex flex-column flex-sm-row gap-1"
+                                    >
+                                        <input
+                                            type="number"
+                                            class="form-control"
+                                            placeholder="kg"
+                                            aria-label="Chest Press Set 2 Weight"
+                                            inputmode="decimal"
+                                        />
+                                        <input
+                                            type="number"
+                                            class="form-control"
+                                            placeholder="reps"
+                                            aria-label="Chest Press Set 2 Reps"
+                                            inputmode="decimal"
+                                        />
+                                    </div>
+                                </td>
+                                <td>
+                                    <div
+                                        class="d-flex flex-column flex-sm-row gap-1"
+                                    >
+                                        <input
+                                            type="number"
+                                            class="form-control"
+                                            placeholder="kg"
+                                            aria-label="Chest Press Set 3 Weight"
+                                            inputmode="decimal"
+                                        />
+                                        <input
+                                            type="number"
+                                            class="form-control"
+                                            placeholder="reps"
+                                            aria-label="Chest Press Set 3 Reps"
+                                            inputmode="decimal"
+                                        />
+                                    </div>
+                                </td>
                             </tr>
                             <tr>
-                                <td><strong>Lat Pulldown</strong><br><small class="text-muted">Back, Biceps</small></td>
-                                <td><div class="d-flex flex-column flex-sm-row gap-1"><input type="number" class="form-control" placeholder="kg" aria-label="Lat Pulldown Set 1 Weight" inputmode="decimal"><input type="number" class="form-control" placeholder="reps" aria-label="Lat Pulldown Set 1 Reps" inputmode="decimal"></div></td>
-                                <td><div class="d-flex flex-column flex-sm-row gap-1"><input type="number" class="form-control" placeholder="kg" aria-label="Lat Pulldown Set 2 Weight" inputmode="decimal"><input type="number" class="form-control" placeholder="reps" aria-label="Lat Pulldown Set 2 Reps" inputmode="decimal"></div></td>
-                                <td><div class="d-flex flex-column flex-sm-row gap-1"><input type="number" class="form-control" placeholder="kg" aria-label="Lat Pulldown Set 3 Weight" inputmode="decimal"><input type="number" class="form-control" placeholder="reps" aria-label="Lat Pulldown Set 3 Reps" inputmode="decimal"></div></td>
+                                <td>
+                                    <strong>Lat Pulldown</strong><br /><small
+                                        class="text-muted"
+                                        >Back, Biceps</small
+                                    >
+                                </td>
+                                <td>
+                                    <div
+                                        class="d-flex flex-column flex-sm-row gap-1"
+                                    >
+                                        <input
+                                            type="number"
+                                            class="form-control"
+                                            placeholder="kg"
+                                            aria-label="Lat Pulldown Set 1 Weight"
+                                            inputmode="decimal"
+                                        />
+                                        <input
+                                            type="number"
+                                            class="form-control"
+                                            placeholder="reps"
+                                            aria-label="Lat Pulldown Set 1 Reps"
+                                            inputmode="decimal"
+                                        />
+                                    </div>
+                                </td>
+                                <td>
+                                    <div
+                                        class="d-flex flex-column flex-sm-row gap-1"
+                                    >
+                                        <input
+                                            type="number"
+                                            class="form-control"
+                                            placeholder="kg"
+                                            aria-label="Lat Pulldown Set 2 Weight"
+                                            inputmode="decimal"
+                                        />
+                                        <input
+                                            type="number"
+                                            class="form-control"
+                                            placeholder="reps"
+                                            aria-label="Lat Pulldown Set 2 Reps"
+                                            inputmode="decimal"
+                                        />
+                                    </div>
+                                </td>
+                                <td>
+                                    <div
+                                        class="d-flex flex-column flex-sm-row gap-1"
+                                    >
+                                        <input
+                                            type="number"
+                                            class="form-control"
+                                            placeholder="kg"
+                                            aria-label="Lat Pulldown Set 3 Weight"
+                                            inputmode="decimal"
+                                        />
+                                        <input
+                                            type="number"
+                                            class="form-control"
+                                            placeholder="reps"
+                                            aria-label="Lat Pulldown Set 3 Reps"
+                                            inputmode="decimal"
+                                        />
+                                    </div>
+                                </td>
                             </tr>
                             <tr>
-                                <td><strong>Shoulder Press</strong><br><small class="text-muted">Shoulders, Triceps</small></td>
-                                <td><div class="d-flex flex-column flex-sm-row gap-1"><input type="number" class="form-control" placeholder="kg" aria-label="Shoulder Press Set 1 Weight" inputmode="decimal"><input type="number" class="form-control" placeholder="reps" aria-label="Shoulder Press Set 1 Reps" inputmode="decimal"></div></td>
-                                <td><div class="d-flex flex-column flex-sm-row gap-1"><input type="number" class="form-control" placeholder="kg" aria-label="Shoulder Press Set 2 Weight" inputmode="decimal"><input type="number" class="form-control" placeholder="reps" aria-label="Shoulder Press Set 2 Reps" inputmode="decimal"></div></td>
-                                <td><div class="d-flex flex-column flex-sm-row gap-1"><input type="number" class="form-control" placeholder="kg" aria-label="Shoulder Press Set 3 Weight" inputmode="decimal"><input type="number" class="form-control" placeholder="reps" aria-label="Shoulder Press Set 3 Reps" inputmode="decimal"></div></td>
+                                <td>
+                                    <strong>Shoulder Press</strong><br /><small
+                                        class="text-muted"
+                                        >Shoulders, Triceps</small
+                                    >
+                                </td>
+                                <td>
+                                    <div
+                                        class="d-flex flex-column flex-sm-row gap-1"
+                                    >
+                                        <input
+                                            type="number"
+                                            class="form-control"
+                                            placeholder="kg"
+                                            aria-label="Shoulder Press Set 1 Weight"
+                                            inputmode="decimal"
+                                        />
+                                        <input
+                                            type="number"
+                                            class="form-control"
+                                            placeholder="reps"
+                                            aria-label="Shoulder Press Set 1 Reps"
+                                            inputmode="decimal"
+                                        />
+                                    </div>
+                                </td>
+                                <td>
+                                    <div
+                                        class="d-flex flex-column flex-sm-row gap-1"
+                                    >
+                                        <input
+                                            type="number"
+                                            class="form-control"
+                                            placeholder="kg"
+                                            aria-label="Shoulder Press Set 2 Weight"
+                                            inputmode="decimal"
+                                        />
+                                        <input
+                                            type="number"
+                                            class="form-control"
+                                            placeholder="reps"
+                                            aria-label="Shoulder Press Set 2 Reps"
+                                            inputmode="decimal"
+                                        />
+                                    </div>
+                                </td>
+                                <td>
+                                    <div
+                                        class="d-flex flex-column flex-sm-row gap-1"
+                                    >
+                                        <input
+                                            type="number"
+                                            class="form-control"
+                                            placeholder="kg"
+                                            aria-label="Shoulder Press Set 3 Weight"
+                                            inputmode="decimal"
+                                        />
+                                        <input
+                                            type="number"
+                                            class="form-control"
+                                            placeholder="reps"
+                                            aria-label="Shoulder Press Set 3 Reps"
+                                            inputmode="decimal"
+                                        />
+                                    </div>
+                                </td>
                             </tr>
                             <tr>
-                                <td><strong>Seated Row</strong><br><small class="text-muted">Back</small></td>
-                                <td><div class="d-flex flex-column flex-sm-row gap-1"><input type="number" class="form-control" placeholder="kg" aria-label="Seated Row Set 1 Weight" inputmode="decimal"><input type="number" class="form-control" placeholder="reps" aria-label="Seated Row Set 1 Reps" inputmode="decimal"></div></td>
-                                <td><div class="d-flex flex-column flex-sm-row gap-1"><input type="number" class="form-control" placeholder="kg" aria-label="Seated Row Set 2 Weight" inputmode="decimal"><input type="number" class="form-control" placeholder="reps" aria-label="Seated Row Set 2 Reps" inputmode="decimal"></div></td>
-                                <td><div class="d-flex flex-column flex-sm-row gap-1"><input type="number" class="form-control" placeholder="kg" aria-label="Seated Row Set 3 Weight" inputmode="decimal"><input type="number" class="form-control" placeholder="reps" aria-label="Seated Row Set 3 Reps" inputmode="decimal"></div></td>
+                                <td>
+                                    <strong>Seated Row</strong><br /><small
+                                        class="text-muted"
+                                        >Back</small
+                                    >
+                                </td>
+                                <td>
+                                    <div
+                                        class="d-flex flex-column flex-sm-row gap-1"
+                                    >
+                                        <input
+                                            type="number"
+                                            class="form-control"
+                                            placeholder="kg"
+                                            aria-label="Seated Row Set 1 Weight"
+                                            inputmode="decimal"
+                                        />
+                                        <input
+                                            type="number"
+                                            class="form-control"
+                                            placeholder="reps"
+                                            aria-label="Seated Row Set 1 Reps"
+                                            inputmode="decimal"
+                                        />
+                                    </div>
+                                </td>
+                                <td>
+                                    <div
+                                        class="d-flex flex-column flex-sm-row gap-1"
+                                    >
+                                        <input
+                                            type="number"
+                                            class="form-control"
+                                            placeholder="kg"
+                                            aria-label="Seated Row Set 2 Weight"
+                                            inputmode="decimal"
+                                        />
+                                        <input
+                                            type="number"
+                                            class="form-control"
+                                            placeholder="reps"
+                                            aria-label="Seated Row Set 2 Reps"
+                                            inputmode="decimal"
+                                        />
+                                    </div>
+                                </td>
+                                <td>
+                                    <div
+                                        class="d-flex flex-column flex-sm-row gap-1"
+                                    >
+                                        <input
+                                            type="number"
+                                            class="form-control"
+                                            placeholder="kg"
+                                            aria-label="Seated Row Set 3 Weight"
+                                            inputmode="decimal"
+                                        />
+                                        <input
+                                            type="number"
+                                            class="form-control"
+                                            placeholder="reps"
+                                            aria-label="Seated Row Set 3 Reps"
+                                            inputmode="decimal"
+                                        />
+                                    </div>
+                                </td>
                             </tr>
                             <tr>
-                                <td><strong>Biceps Curl</strong><br><small class="text-muted">Biceps</small></td>
-                                <td><div class="d-flex flex-column flex-sm-row gap-1"><input type="number" class="form-control" placeholder="kg" aria-label="Biceps Curl Set 1 Weight" inputmode="decimal"><input type="number" class="form-control" placeholder="reps" aria-label="Biceps Curl Set 1 Reps" inputmode="decimal"></div></td>
-                                <td><div class="d-flex flex-column flex-sm-row gap-1"><input type="number" class="form-control" placeholder="kg" aria-label="Biceps Curl Set 2 Weight" inputmode="decimal"><input type="number" class="form-control" placeholder="reps" aria-label="Biceps Curl Set 2 Reps" inputmode="decimal"></div></td>
-                                <td><!-- 2 Sets Only --></td>
+                                <td>
+                                    <strong>Biceps Curl</strong><br /><small
+                                        class="text-muted"
+                                        >Biceps</small
+                                    >
+                                </td>
+                                <td>
+                                    <div
+                                        class="d-flex flex-column flex-sm-row gap-1"
+                                    >
+                                        <input
+                                            type="number"
+                                            class="form-control"
+                                            placeholder="kg"
+                                            aria-label="Biceps Curl Set 1 Weight"
+                                            inputmode="decimal"
+                                        />
+                                        <input
+                                            type="number"
+                                            class="form-control"
+                                            placeholder="reps"
+                                            aria-label="Biceps Curl Set 1 Reps"
+                                            inputmode="decimal"
+                                        />
+                                    </div>
+                                </td>
+                                <td>
+                                    <div
+                                        class="d-flex flex-column flex-sm-row gap-1"
+                                    >
+                                        <input
+                                            type="number"
+                                            class="form-control"
+                                            placeholder="kg"
+                                            aria-label="Biceps Curl Set 2 Weight"
+                                            inputmode="decimal"
+                                        />
+                                        <input
+                                            type="number"
+                                            class="form-control"
+                                            placeholder="reps"
+                                            aria-label="Biceps Curl Set 2 Reps"
+                                            inputmode="decimal"
+                                        />
+                                    </div>
+                                </td>
+                                <td></td>
                             </tr>
                             <tr>
-                                <td><strong>Triceps Press</strong><br><small class="text-muted">Triceps</small></td>
-                                <td><div class="d-flex flex-column flex-sm-row gap-1"><input type="number" class="form-control" placeholder="kg" aria-label="Triceps Press Set 1 Weight" inputmode="decimal"><input type="number" class="form-control" placeholder="reps" aria-label="Triceps Press Set 1 Reps" inputmode="decimal"></div></td>
-                                <td><div class="d-flex flex-column flex-sm-row gap-1"><input type="number" class="form-control" placeholder="kg" aria-label="Triceps Press Set 2 Weight" inputmode="decimal"><input type="number" class="form-control" placeholder="reps" aria-label="Triceps Press Set 2 Reps" inputmode="decimal"></div></td>
-                                <td><!-- 2 Sets Only --></td>
+                                <td>
+                                    <strong>Triceps Press</strong><br /><small
+                                        class="text-muted"
+                                        >Triceps</small
+                                    >
+                                </td>
+                                <td>
+                                    <div
+                                        class="d-flex flex-column flex-sm-row gap-1"
+                                    >
+                                        <input
+                                            type="number"
+                                            class="form-control"
+                                            placeholder="kg"
+                                            aria-label="Triceps Press Set 1 Weight"
+                                            inputmode="decimal"
+                                        />
+                                        <input
+                                            type="number"
+                                            class="form-control"
+                                            placeholder="reps"
+                                            aria-label="Triceps Press Set 1 Reps"
+                                            inputmode="decimal"
+                                        />
+                                    </div>
+                                </td>
+                                <td>
+                                    <div
+                                        class="d-flex flex-column flex-sm-row gap-1"
+                                    >
+                                        <input
+                                            type="number"
+                                            class="form-control"
+                                            placeholder="kg"
+                                            aria-label="Triceps Press Set 2 Weight"
+                                            inputmode="decimal"
+                                        />
+                                        <input
+                                            type="number"
+                                            class="form-control"
+                                            placeholder="reps"
+                                            aria-label="Triceps Press Set 2 Reps"
+                                            inputmode="decimal"
+                                        />
+                                    </div>
+                                </td>
+                                <td></td>
                             </tr>
                         </tbody>
                     </table>
                 </div>
             </div>
         </div>
-
-        <!-- Lower Body Workout Table -->
         <div class="card shadow-sm mb-5" id="lower-body-card">
-            <div class="card-header"><h3 class="my-2">🦵 Lower Body & Core Workout</h3></div>
+            <div class="card-header">
+                <h3 class="my-2">🦵 Lower Body & Core Workout</h3>
+            </div>
             <div class="card-body">
                 <div class="table-responsive">
                     <table class="table table-striped table-bordered">
                         <thead class="table-dark">
-                               <tr><th>Exercise</th><th>Set 1 (kg/reps)</th><th>Set 2 (kg/reps)</th><th>Set 3 (kg/reps)</th></tr>
+                            <tr>
+                                <th>Exercise</th>
+                                <th>Set 1 (kg/reps)</th>
+                                <th>Set 2 (kg/reps)</th>
+                                <th>Set 3 (kg/reps)</th>
+                            </tr>
                         </thead>
                         <tbody>
-                               <tr>
-                                 <td><strong>Leg Press</strong><br><small class="text-muted">Quads, Glutes, Hamstrings</small></td>
-                                 <td><div class="d-flex flex-column flex-sm-row gap-1"><input type="number" class="form-control" placeholder="kg" aria-label="Leg Press Set 1 Weight" inputmode="decimal"><input type="number" class="form-control" placeholder="reps" aria-label="Leg Press Set 1 Reps" inputmode="decimal"></div></td>
-                                 <td><div class="d-flex flex-column flex-sm-row gap-1"><input type="number" class="form-control" placeholder="kg" aria-label="Leg Press Set 2 Weight" inputmode="decimal"><input type="number" class="form-control" placeholder="reps" aria-label="Leg Press Set 2 Reps" inputmode="decimal"></div></td>
-                                 <td><div class="d-flex flex-column flex-sm-row gap-1"><input type="number" class="form-control" placeholder="kg" aria-label="Leg Press Set 3 Weight" inputmode="decimal"><input type="number" class="form-control" placeholder="reps" aria-label="Leg Press Set 3 Reps" inputmode="decimal"></div></td>
+                            <tr>
+                                <td>
+                                    <strong>Leg Press</strong><br /><small
+                                        class="text-muted"
+                                        >Quads, Glutes, Hamstrings</small
+                                    >
+                                </td>
+                                <td>
+                                    <div
+                                        class="d-flex flex-column flex-sm-row gap-1"
+                                    >
+                                        <input
+                                            type="number"
+                                            class="form-control"
+                                            placeholder="kg"
+                                            aria-label="Leg Press Set 1 Weight"
+                                            inputmode="decimal"
+                                        />
+                                        <input
+                                            type="number"
+                                            class="form-control"
+                                            placeholder="reps"
+                                            aria-label="Leg Press Set 1 Reps"
+                                            inputmode="decimal"
+                                        />
+                                    </div>
+                                </td>
+                                <td>
+                                    <div
+                                        class="d-flex flex-column flex-sm-row gap-1"
+                                    >
+                                        <input
+                                            type="number"
+                                            class="form-control"
+                                            placeholder="kg"
+                                            aria-label="Leg Press Set 2 Weight"
+                                            inputmode="decimal"
+                                        />
+                                        <input
+                                            type="number"
+                                            class="form-control"
+                                            placeholder="reps"
+                                            aria-label="Leg Press Set 2 Reps"
+                                            inputmode="decimal"
+                                        />
+                                    </div>
+                                </td>
+                                <td>
+                                    <div
+                                        class="d-flex flex-column flex-sm-row gap-1"
+                                    >
+                                        <input
+                                            type="number"
+                                            class="form-control"
+                                            placeholder="kg"
+                                            aria-label="Leg Press Set 3 Weight"
+                                            inputmode="decimal"
+                                        />
+                                        <input
+                                            type="number"
+                                            class="form-control"
+                                            placeholder="reps"
+                                            aria-label="Leg Press Set 3 Reps"
+                                            inputmode="decimal"
+                                        />
+                                    </div>
+                                </td>
                             </tr>
                             <tr>
-                                 <td><strong>Seated Leg Curl</strong><br><small class="text-muted">Hamstrings</small></td>
-                                 <td><div class="d-flex flex-column flex-sm-row gap-1"><input type="number" class="form-control" placeholder="kg" aria-label="Seated Leg Curl Set 1 Weight" inputmode="decimal"><input type="number" class="form-control" placeholder="reps" aria-label="Seated Leg Curl Set 1 Reps" inputmode="decimal"></div></td>
-                                 <td><div class="d-flex flex-column flex-sm-row gap-1"><input type="number" class="form-control" placeholder="kg" aria-label="Seated Leg Curl Set 2 Weight" inputmode="decimal"><input type="number" class="form-control" placeholder="reps" aria-label="Seated Leg Curl Set 2 Reps" inputmode="decimal"></div></td>
-                                 <td><div class="d-flex flex-column flex-sm-row gap-1"><input type="number" class="form-control" placeholder="kg" aria-label="Seated Leg Curl Set 3 Weight" inputmode="decimal"><input type="number" class="form-control" placeholder="reps" aria-label="Seated Leg Curl Set 3 Reps" inputmode="decimal"></div></td>
+                                <td>
+                                    <strong>Seated Leg Curl</strong><br /><small
+                                        class="text-muted"
+                                        >Hamstrings</small
+                                    >
+                                </td>
+                                <td>
+                                    <div
+                                        class="d-flex flex-column flex-sm-row gap-1"
+                                    >
+                                        <input
+                                            type="number"
+                                            class="form-control"
+                                            placeholder="kg"
+                                            aria-label="Seated Leg Curl Set 1 Weight"
+                                            inputmode="decimal"
+                                        />
+                                        <input
+                                            type="number"
+                                            class="form-control"
+                                            placeholder="reps"
+                                            aria-label="Seated Leg Curl Set 1 Reps"
+                                            inputmode="decimal"
+                                        />
+                                    </div>
+                                </td>
+                                <td>
+                                    <div
+                                        class="d-flex flex-column flex-sm-row gap-1"
+                                    >
+                                        <input
+                                            type="number"
+                                            class="form-control"
+                                            placeholder="kg"
+                                            aria-label="Seated Leg Curl Set 2 Weight"
+                                            inputmode="decimal"
+                                        />
+                                        <input
+                                            type="number"
+                                            class="form-control"
+                                            placeholder="reps"
+                                            aria-label="Seated Leg Curl Set 2 Reps"
+                                            inputmode="decimal"
+                                        />
+                                    </div>
+                                </td>
+                                <td>
+                                    <div
+                                        class="d-flex flex-column flex-sm-row gap-1"
+                                    >
+                                        <input
+                                            type="number"
+                                            class="form-control"
+                                            placeholder="kg"
+                                            aria-label="Seated Leg Curl Set 3 Weight"
+                                            inputmode="decimal"
+                                        />
+                                        <input
+                                            type="number"
+                                            class="form-control"
+                                            placeholder="reps"
+                                            aria-label="Seated Leg Curl Set 3 Reps"
+                                            inputmode="decimal"
+                                        />
+                                    </div>
+                                </td>
                             </tr>
                             <tr>
-                                 <td><strong>Leg Extension</strong><br><small class="text-muted">Quads</small></td>
-                                 <td><div class="d-flex flex-column flex-sm-row gap-1"><input type="number" class="form-control" placeholder="kg" aria-label="Leg Extension Set 1 Weight" inputmode="decimal"><input type="number" class="form-control" placeholder="reps" aria-label="Leg Extension Set 1 Reps" inputmode="decimal"></div></td>
-                                 <td><div class="d-flex flex-column flex-sm-row gap-1"><input type="number" class="form-control" placeholder="kg" aria-label="Leg Extension Set 2 Weight" inputmode="decimal"><input type="number" class="form-control" placeholder="reps" aria-label="Leg Extension Set 2 Reps" inputmode="decimal"></div></td>
-                                 <td><!-- 2 Sets Only --></td>
+                                <td>
+                                    <strong>Leg Extension</strong><br /><small
+                                        class="text-muted"
+                                        >Quads</small
+                                    >
+                                </td>
+                                <td>
+                                    <div
+                                        class="d-flex flex-column flex-sm-row gap-1"
+                                    >
+                                        <input
+                                            type="number"
+                                            class="form-control"
+                                            placeholder="kg"
+                                            aria-label="Leg Extension Set 1 Weight"
+                                            inputmode="decimal"
+                                        />
+                                        <input
+                                            type="number"
+                                            class="form-control"
+                                            placeholder="reps"
+                                            aria-label="Leg Extension Set 1 Reps"
+                                            inputmode="decimal"
+                                        />
+                                    </div>
+                                </td>
+                                <td>
+                                    <div
+                                        class="d-flex flex-column flex-sm-row gap-1"
+                                    >
+                                        <input
+                                            type="number"
+                                            class="form-control"
+                                            placeholder="kg"
+                                            aria-label="Leg Extension Set 2 Weight"
+                                            inputmode="decimal"
+                                        />
+                                        <input
+                                            type="number"
+                                            class="form-control"
+                                            placeholder="reps"
+                                            aria-label="Leg Extension Set 2 Reps"
+                                            inputmode="decimal"
+                                        />
+                                    </div>
+                                </td>
+                                <td></td>
                             </tr>
                             <tr>
-                                 <td><strong>Seated Calf Raise</strong><br><small class="text-muted">Calves</small></td>
-                                 <td><div class="d-flex flex-column flex-sm-row gap-1"><input type="number" class="form-control" placeholder="kg" aria-label="Seated Calf Raise Set 1 Weight" inputmode="decimal"><input type="number" class="form-control" placeholder="reps" aria-label="Seated Calf Raise Set 1 Reps" inputmode="decimal"></div></td>
-                                 <td><div class="d-flex flex-column flex-sm-row gap-1"><input type="number" class="form-control" placeholder="kg" aria-label="Seated Calf Raise Set 2 Weight" inputmode="decimal"><input type="number" class="form-control" placeholder="reps" aria-label="Seated Calf Raise Set 2 Reps" inputmode="decimal"></div></td>
-                                 <td><div class="d-flex flex-column flex-sm-row gap-1"><input type="number" class="form-control" placeholder="kg" aria-label="Seated Calf Raise Set 3 Weight" inputmode="decimal"><input type="number" class="form-control" placeholder="reps" aria-label="Seated Calf Raise Set 3 Reps" inputmode="decimal"></div></td>
+                                <td>
+                                    <strong>Seated Calf Raise</strong><br /><small
+                                        class="text-muted"
+                                        >Calves</small
+                                    >
+                                </td>
+                                <td>
+                                    <div
+                                        class="d-flex flex-column flex-sm-row gap-1"
+                                    >
+                                        <input
+                                            type="number"
+                                            class="form-control"
+                                            placeholder="kg"
+                                            aria-label="Seated Calf Raise Set 1 Weight"
+                                            inputmode="decimal"
+                                        />
+                                        <input
+                                            type="number"
+                                            class="form-control"
+                                            placeholder="reps"
+                                            aria-label="Seated Calf Raise Set 1 Reps"
+                                            inputmode="decimal"
+                                        />
+                                    </div>
+                                </td>
+                                <td>
+                                    <div
+                                        class="d-flex flex-column flex-sm-row gap-1"
+                                    >
+                                        <input
+                                            type="number"
+                                            class="form-control"
+                                            placeholder="kg"
+                                            aria-label="Seated Calf Raise Set 2 Weight"
+                                            inputmode="decimal"
+                                        />
+                                        <input
+                                            type="number"
+                                            class="form-control"
+                                            placeholder="reps"
+                                            aria-label="Seated Calf Raise Set 2 Reps"
+                                            inputmode="decimal"
+                                        />
+                                    </div>
+                                </td>
+                                <td>
+                                    <div
+                                        class="d-flex flex-column flex-sm-row gap-1"
+                                    >
+                                        <input
+                                            type="number"
+                                            class="form-control"
+                                            placeholder="kg"
+                                            aria-label="Seated Calf Raise Set 3 Weight"
+                                            inputmode="decimal"
+                                        />
+                                        <input
+                                            type="number"
+                                            class="form-control"
+                                            placeholder="reps"
+                                            aria-label="Seated Calf Raise Set 3 Reps"
+                                            inputmode="decimal"
+                                        />
+                                    </div>
+                                </td>
                             </tr>
                             <tr>
-                                 <td><strong>Ab Machine</strong><br><small class="text-muted">Abdominals</small></td>
-                                 <td><div class="d-flex flex-column flex-sm-row gap-1"><input type="number" class="form-control" placeholder="kg" aria-label="Ab Machine Set 1 Weight" inputmode="decimal"><input type="number" class="form-control" placeholder="reps" aria-label="Ab Machine Set 1 Reps" inputmode="decimal"></div></td>
-                                 <td><div class="d-flex flex-column flex-sm-row gap-1"><input type="number" class="form-control" placeholder="kg" aria-label="Ab Machine Set 2 Weight" inputmode="decimal"><input type="number" class="form-control" placeholder="reps" aria-label="Ab Machine Set 2 Reps" inputmode="decimal"></div></td>
-                                 <td><div class="d-flex flex-column flex-sm-row gap-1"><input type="number" class="form-control" placeholder="kg" aria-label="Ab Machine Set 3 Weight" inputmode="decimal"><input type="number" class="form-control" placeholder="reps" aria-label="Ab Machine Set 3 Reps" inputmode="decimal"></div></td>
+                                <td>
+                                    <strong>Ab Machine</strong><br /><small
+                                        class="text-muted"
+                                        >Abdominals</small
+                                    >
+                                </td>
+                                <td>
+                                    <div
+                                        class="d-flex flex-column flex-sm-row gap-1"
+                                    >
+                                        <input
+                                            type="number"
+                                            class="form-control"
+                                            placeholder="kg"
+                                            aria-label="Ab Machine Set 1 Weight"
+                                            inputmode="decimal"
+                                        />
+                                        <input
+                                            type="number"
+                                            class="form-control"
+                                            placeholder="reps"
+                                            aria-label="Ab Machine Set 1 Reps"
+                                            inputmode="decimal"
+                                        />
+                                    </div>
+                                </td>
+                                <td>
+                                    <div
+                                        class="d-flex flex-column flex-sm-row gap-1"
+                                    >
+                                        <input
+                                            type="number"
+                                            class="form-control"
+                                            placeholder="kg"
+                                            aria-label="Ab Machine Set 2 Weight"
+                                            inputmode="decimal"
+                                        />
+                                        <input
+                                            type="number"
+                                            class="form-control"
+                                            placeholder="reps"
+                                            aria-label="Ab Machine Set 2 Reps"
+                                            inputmode="decimal"
+                                        />
+                                    </div>
+                                </td>
+                                <td>
+                                    <div
+                                        class="d-flex flex-column flex-sm-row gap-1"
+                                    >
+                                        <input
+                                            type="number"
+                                            class="form-control"
+                                            placeholder="kg"
+                                            aria-label="Ab Machine Set 3 Weight"
+                                            inputmode="decimal"
+                                        />
+                                        <input
+                                            type="number"
+                                            class="form-control"
+                                            placeholder="reps"
+                                            aria-label="Ab Machine Set 3 Reps"
+                                            inputmode="decimal"
+                                        />
+                                    </div>
+                                </td>
                             </tr>
                         </tbody>
                     </table>
                 </div>
             </div>
         </div>
-
-        <!-- Action Buttons -->
         <div class="text-center mt-4">
-            <button class="btn btn-primary btn-lg" onclick="saveToCloud()">Save to Cloud</button>
-            <button class="btn btn-secondary btn-lg" onclick="loadFromCloud()">Load from Cloud</button>
-            <button class="btn btn-success btn-lg" onclick="exportToJson()">Export to JSON</button>
-            <label for="import-json-input" class="btn btn-info btn-lg">Import from JSON</label>
-            <input type="file" id="import-json-input" accept=".json" onchange="importFromJson(event)">
-            <button class="btn btn-danger btn-lg" onclick="clearInputs()">Clear All Inputs</button>
+            <button class="btn btn-primary btn-lg" onclick="saveToCloud()">
+                Save to Cloud
+            </button>
+            <button class="btn btn-secondary btn-lg" onclick="loadFromCloud()">
+                Load from Cloud
+            </button>
+            <button class="btn btn-success btn-lg" onclick="exportToJson()">
+                Export to JSON
+            </button>
+            <label for="import-json-input" class="btn btn-info btn-lg"
+                >Import from JSON</label
+            >
+            <input
+                type="file"
+                id="import-json-input"
+                accept=".json"
+                onchange="importFromJson(event)"
+            />
+            <button class="btn btn-danger btn-lg" onclick="clearInputs()">
+                Clear All Inputs
+            </button>
         </div>
-
     </div>
-
-    <!-- Bootstrap JS Bundle -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
-
-    <!-- App Logic Script -->
+    <script
+        src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+        crossorigin="anonymous"
+    ></script>
     <script>
-        const DATA_STORAGE_KEY = 'minimalistWorkoutData';
-        const THEME_STORAGE_KEY = 'minimalistWorkoutTheme';
-
-        // --- JSONBin.com Configuration ---
-        // IMPORTANT: Replace with your actual Master Key and Bin ID from JSONBin.com
-        // Go to jsonbin.io, create an account, create a new bin, and get your keys.
-        // Make sure the bin is 'private' and 'updatable'.
-        const JSONBIN_MASTER_KEY = '__API_KEY__'; // <-- REPLACE THIS
-        const JSONBIN_BIN_ID = '688755047b4b8670d8a886a8';       // <-- REPLACE THIS
+        const DATA_STORAGE_KEY = "minimalistWorkoutData";
+        const THEME_STORAGE_KEY = "minimalistWorkoutTheme";
+        const JSONBIN_MASTER_KEY = "__API_KEY__";
+        const JSONBIN_BIN_ID = "688755047b4b8670d8a886a8";
         const JSONBIN_URL = `https://api.jsonbin.io/v3/b/${JSONBIN_BIN_ID}`;
-
-        // Flag to check if API keys are configured
         let areApiKeysConfigured = false;
-
         function checkApiKeysConfiguration() {
-            const warningElement = document.getElementById('apiKeyWarning');
-            if (JSONBIN_MASTER_KEY === 'JSONBIN_MASTER_KEY' || JSONBIN_BIN_ID === 'JSONBIN_BIN_ID') {
+            const warningElement = document.getElementById("apiKeyWarning");
+            if (
+                JSONBIN_MASTER_KEY === "JSONBIN_MASTER_KEY" ||
+                JSONBIN_BIN_ID === "JSONBIN_BIN_ID"
+            ) {
                 areApiKeysConfigured = false;
-                warningElement.style.display = 'block'; // Show the warning
-                console.warn("JSONBin.com API Warning: Please update JSONBIN_MASTER_KEY and JSONBIN_BIN_ID in the script to enable cloud sync. Current values are placeholders.");
+                warningElement.style.display = "block";
+                console.warn(
+                    "JSONBin.com API Warning: Please update JSONBIN_MASTER_KEY and JSONBIN_BIN_ID in the script to enable cloud sync. Current values are placeholders."
+                );
                 console.warn("Current JSONBIN_MASTER_KEY:", JSONBIN_MASTER_KEY);
                 console.warn("Current JSONBIN_BIN_ID:", JSONBIN_BIN_ID);
                 return false;
             } else {
                 areApiKeysConfigured = true;
-                warningElement.style.display = 'none'; // Hide the warning
-                console.info("JSONBin.com API Keys configured. Cloud Save/Load should work.");
+                warningElement.style.display = "none";
+                console.info(
+                    "JSONBin.com API Keys configured. Cloud Save/Load should work."
+                );
                 return true;
             }
         }
-
-
         function getWorkoutDataFromPage() {
             const workoutData = { upperBody: [], lowerBody: [] };
-            document.querySelectorAll('#upper-body-card tbody tr').forEach(row => {
+            document.querySelectorAll("#upper-body-card tbody tr").forEach((row) => {
                 const inputs = row.querySelectorAll('input[type="number"]');
                 const rowData = {
-                    set1: { weight: inputs[0]?.value || '', reps: inputs[1]?.value || '' },
-                    set2: { weight: inputs[2]?.value || '', reps: inputs[3]?.value || '' },
-                    set3: { weight: inputs[4]?.value || '', reps: inputs[5]?.value || '' }
+                    set1: { weight: inputs[0]?.value || "", reps: inputs[1]?.value || "" },
+                    set2: { weight: inputs[2]?.value || "", reps: inputs[3]?.value || "" },
+                    set3: { weight: inputs[4]?.value || "", reps: inputs[5]?.value || "" },
                 };
                 workoutData.upperBody.push(rowData);
             });
-            document.querySelectorAll('#lower-body-card tbody tr').forEach(row => {
+            document.querySelectorAll("#lower-body-card tbody tr").forEach((row) => {
                 const inputs = row.querySelectorAll('input[type="number"]');
                 const rowData = {
-                    set1: { weight: inputs[0]?.value || '', reps: inputs[1]?.value || '' },
-                    set2: { weight: inputs[2]?.value || '', reps: inputs[3]?.value || '' },
-                    set3: { weight: inputs[4]?.value || '', reps: inputs[5]?.value || '' }
+                    set1: { weight: inputs[0]?.value || "", reps: inputs[1]?.value || "" },
+                    set2: { weight: inputs[2]?.value || "", reps: inputs[3]?.value || "" },
+                    set3: { weight: inputs[4]?.value || "", reps: inputs[5]?.value || "" },
                 };
                 workoutData.lowerBody.push(rowData);
             });
             return workoutData;
         }
-
         function populatePageWithData(workoutData, showAlert = false) {
             if (!workoutData || !workoutData.upperBody || !workoutData.lowerBody) {
                 if (showAlert) alert("Import failed: Invalid data format.");
                 console.error("Invalid workout data format:", workoutData);
                 return;
             }
-            document.querySelectorAll('#upper-body-card tbody tr').forEach((row, index) => {
+            document.querySelectorAll("#upper-body-card tbody tr").forEach((row, index) => {
                 const rowData = workoutData.upperBody[index];
                 if (rowData) {
                     const inputs = row.querySelectorAll('input[type="number"]');
-                    // Ensure inputs exist before trying to assign value
-                    if(inputs[0]) inputs[0].value = rowData.set1.weight;
-                    if(inputs[1]) inputs[1].value = rowData.set1.reps;
-                    if(inputs[2]) inputs[2].value = rowData.set2.weight;
-                    if(inputs[3]) inputs[3].value = rowData.set2.reps;
-                    if(inputs[4]) inputs[4].value = rowData.set3.weight;
-                    if(inputs[5]) inputs[5].value = rowData.set3.reps;
+                    if (inputs[0]) inputs[0].value = rowData.set1.weight;
+                    if (inputs[1]) inputs[1].value = rowData.set1.reps;
+                    if (inputs[2]) inputs[2].value = rowData.set2.weight;
+                    if (inputs[3]) inputs[3].value = rowData.set2.reps;
+                    if (inputs[4]) inputs[4].value = rowData.set3.weight;
+                    if (inputs[5]) inputs[5].value = rowData.set3.reps;
                 }
             });
-            document.querySelectorAll('#lower-body-card tbody tr').forEach((row, index) => {
+            document.querySelectorAll("#lower-body-card tbody tr").forEach((row, index) => {
                 const rowData = workoutData.lowerBody[index];
                 if (rowData) {
                     const inputs = row.querySelectorAll('input[type="number"]');
-                     // Ensure inputs exist before trying to assign value
-                    if(inputs[0]) inputs[0].value = rowData.set1.weight;
-                    if(inputs[1]) inputs[1].value = rowData.set1.reps;
-                    if(inputs[2]) inputs[2].value = rowData.set2.weight;
-                    if(inputs[3]) inputs[3].value = rowData.set2.reps;
-                    if(inputs[4]) inputs[4].value = rowData.set3.weight;
-                    if(inputs[5]) inputs[5].value = rowData.set3.reps;
+                    if (inputs[0]) inputs[0].value = rowData.set1.weight;
+                    if (inputs[1]) inputs[1].value = rowData.set1.reps;
+                    if (inputs[2]) inputs[2].value = rowData.set2.weight;
+                    if (inputs[3]) inputs[3].value = rowData.set2.reps;
+                    if (inputs[4]) inputs[4].value = rowData.set3.weight;
+                    if (inputs[5]) inputs[5].value = rowData.set3.reps;
                 }
             });
-            if (showAlert) alert('Workout data loaded successfully!');
+            if (showAlert) alert("Workout data loaded successfully!");
         }
-
-        // This function will still save to local storage for instant feedback/offline use
         function saveToLocalStorage() {
             const workoutData = getWorkoutDataFromPage();
             localStorage.setItem(DATA_STORAGE_KEY, JSON.stringify(workoutData));
         }
-
         function loadFromLocalStorage() {
             const savedDataJSON = localStorage.getItem(DATA_STORAGE_KEY);
             if (savedDataJSON) {
@@ -315,95 +970,117 @@
                     console.log("Workout data loaded from local storage.");
                 } catch (error) {
                     console.error("Error parsing data from local storage:", error);
-                    localStorage.removeItem(DATA_STORAGE_KEY); // Clear corrupt data
-                    alert("Corrupted local data found and cleared. Please re-enter or load from cloud/JSON.");
+                    localStorage.removeItem(DATA_STORAGE_KEY);
+                    alert(
+                        "Corrupted local data found and cleared. Please re-enter or load from cloud/JSON."
+                    );
                 }
             } else {
                 console.log("No workout data found in local storage.");
             }
         }
-
-        // --- JSONBin.com Functions ---
-
         async function saveToCloud() {
             if (!checkApiKeysConfiguration()) {
-                alert("Cloud Save failed: JSONBin.com API keys are not configured. Please see console for details.");
+                alert(
+                    "Cloud Save failed: JSONBin.com API keys are not configured. Please see console for details."
+                );
                 return;
             }
             const workoutData = getWorkoutDataFromPage();
             try {
                 console.log("Attempting to save data to JSONBin.com...");
                 console.log("URL:", JSONBIN_URL);
-                console.log("Master Key (first 5 chars):", JSONBIN_MASTER_KEY.substring(0, 5) + '...');
+                console.log(
+                    "Master Key (first 5 chars):",
+                    JSONBIN_MASTER_KEY.substring(0, 5) + "..."
+                );
                 const response = await fetch(JSONBIN_URL, {
-                    method: 'PUT', // Use PUT to update an existing bin
+                    method: "PUT",
                     headers: {
-                        'Content-Type': 'application/json',
-                        'X-Master-Key': JSONBIN_MASTER_KEY,
-                        'X-Bin-Meta-By-Id': 'false' // Important for updating existing bin
+                        "Content-Type": "application/json",
+                        "X-Master-Key": JSONBIN_MASTER_KEY,
+                        "X-Bin-Meta-By-Id": "false",
                     },
-                    body: JSON.stringify(workoutData)
+                    body: JSON.stringify(workoutData),
                 });
-
                 if (response.ok) {
-                    alert('Workout data saved to cloud successfully!');
+                    alert("Workout data saved to cloud successfully!");
                     console.log("Successfully saved to JSONBin.com.");
                 } else {
                     const errorText = await response.text();
-                    alert(`Failed to save data to cloud: ${response.status} ${response.statusText}\n${errorText}`);
-                    console.error('Failed to save data to cloud:', response.status, response.statusText, errorText);
+                    alert(
+                        `Failed to save data to cloud: ${response.status} ${response.statusText}\n${errorText}`
+                    );
+                    console.error(
+                        "Failed to save data to cloud:",
+                        response.status,
+                        response.statusText,
+                        errorText
+                    );
                 }
             } catch (error) {
-                alert('An error occurred while saving to cloud. Check console for details.');
-                console.error('Error saving to cloud:', error);
+                alert("An error occurred while saving to cloud. Check console for details.");
+                console.error("Error saving to cloud:", error);
             }
         }
-
         async function loadFromCloud() {
             if (!checkApiKeysConfiguration()) {
-                alert("Cloud Load failed: JSONBin.com API keys are not configured. Please see console for details.");
+                alert(
+                    "Cloud Load failed: JSONBin.com API keys are not configured. Please see console for details."
+                );
                 return;
             }
             try {
                 console.log("Attempting to load data from JSONBin.com...");
                 console.log("URL:", JSONBIN_URL);
-                console.log("Master Key (first 5 chars):", JSONBIN_MASTER_KEY.substring(0, 5) + '...');
+                console.log(
+                    "Master Key (first 5 chars):",
+                    JSONBIN_MASTER_KEY.substring(0, 5) + "..."
+                );
                 const response = await fetch(JSONBIN_URL, {
-                    method: 'GET',
+                    method: "GET",
                     headers: {
-                        'X-Master-Key': JSONBIN_MASTER_KEY
-                    }
+                        "X-Master-Key": JSONBIN_MASTER_KEY,
+                    },
                 });
-
                 if (response.ok) {
                     const data = await response.json();
                     if (data && data.record) {
                         populatePageWithData(data.record, true);
-                        saveToLocalStorage(); // Also save loaded data to local storage
+                        saveToLocalStorage();
                         console.log("Successfully loaded from JSONBin.com.");
                     } else {
-                        alert("Cloud Load failed: No 'record' found in the response or data is empty.");
-                        console.error("Cloud Load failed: Invalid data structure from JSONBin.com", data);
+                        alert(
+                            "Cloud Load failed: No 'record' found in the response or data is empty."
+                        );
+                        console.error(
+                            "Cloud Load failed: Invalid data structure from JSONBin.com",
+                            data
+                        );
                     }
                 } else {
                     const errorText = await response.text();
-                    alert(`Failed to load data from cloud: ${response.status} ${response.statusText}\n${errorText}`);
-                    console.error('Failed to load data from cloud:', response.status, response.statusText, errorText);
+                    alert(
+                        `Failed to load data from cloud: ${response.status} ${response.statusText}\n${errorText}`
+                    );
+                    console.error(
+                        "Failed to load data from cloud:",
+                        response.status,
+                        response.statusText,
+                        errorText
+                    );
                 }
             } catch (error) {
-                alert('An error occurred while loading from cloud. Check console for details.');
-                console.error('Error loading from cloud:', error);
+                alert("An error occurred while loading from cloud. Check console for details.");
+                console.error("Error loading from cloud:", error);
             }
         }
-
-        // --- Existing Export/Import/Clear Functions ---
-
         function exportToJson() {
             const workoutData = getWorkoutDataFromPage();
             const dataStr = JSON.stringify(workoutData, null, 2);
             const blob = new Blob([dataStr], { type: "application/json" });
             const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
+            const a = document.createElement("a");
             a.href = url;
             a.download = `workout-${new Date().toISOString().slice(0, 10)}.json`;
             document.body.appendChild(a);
@@ -412,12 +1089,13 @@
             URL.revokeObjectURL(url);
             alert("Workout data exported to JSON file.");
         }
-
         function importFromJson(event) {
             const file = event.target.files[0];
-            if (!file) { return; }
+            if (!file) {
+                return;
+            }
             const reader = new FileReader();
-            reader.onload = function(e) {
+            reader.onload = function (e) {
                 try {
                     const workoutData = JSON.parse(e.target.result);
                     populatePageWithData(workoutData, true);
@@ -429,52 +1107,42 @@
                 }
             };
             reader.readAsText(file);
-            event.target.value = null; // Clear the file input
+            event.target.value = null;
         }
-
         function clearInputs() {
-            if (confirm("Are you sure you want to clear all weights and reps? This will also clear your auto-saved data in local storage.")) {
-                document.querySelectorAll('input[type="number"]').forEach(input => input.value = '');
-                saveToLocalStorage(); // Save empty data to local storage
+            if (
+                confirm(
+                    "Are you sure you want to clear all weights and reps? This will also clear your auto-saved data in local storage."
+                )
+            ) {
+                document.querySelectorAll('input[type="number"]').forEach((input) => {
+                    input.value = "";
+                });
+                saveToLocalStorage();
                 alert("All inputs cleared and local data reset.");
             }
         }
-
-        // --- Initializer ---
-        document.addEventListener('DOMContentLoaded', () => {
-            // Check API keys and show/hide warning on load
+        document.addEventListener("DOMContentLoaded", () => {
             checkApiKeysConfiguration();
-
-            // Load workout data from local storage on page load
             loadFromLocalStorage();
-
-            // Add event listeners for input changes to auto-save
-            document.querySelectorAll('input[type="number"]').forEach(input => {
-                input.addEventListener('input', saveToLocalStorage);
+            document.querySelectorAll('input[type="number"]').forEach((input) => {
+                input.addEventListener("input", saveToLocalStorage);
             });
-
-            // --- Dark Mode Logic ---
-            const darkModeSwitch = document.getElementById('darkModeSwitch');
-
+            const darkModeSwitch = document.getElementById("darkModeSwitch");
             const enableDarkMode = () => {
-                document.body.classList.add('dark-mode');
-                localStorage.setItem(THEME_STORAGE_KEY, 'dark');
+                document.body.classList.add("dark-mode");
+                localStorage.setItem(THEME_STORAGE_KEY, "dark");
                 darkModeSwitch.checked = true;
             };
-
             const disableDarkMode = () => {
-                document.body.classList.remove('dark-mode');
-                localStorage.setItem(THEME_STORAGE_KEY, 'light');
+                document.body.classList.remove("dark-mode");
+                localStorage.setItem(THEME_STORAGE_KEY, "light");
                 darkModeSwitch.checked = false;
             };
-
-            // Check for saved theme preference
-            if (localStorage.getItem(THEME_STORAGE_KEY) === 'dark') {
+            if (localStorage.getItem(THEME_STORAGE_KEY) === "dark") {
                 enableDarkMode();
             }
-
-            // Add listener to the toggle
-            darkModeSwitch.addEventListener('change', () => {
+            darkModeSwitch.addEventListener("change", () => {
                 if (darkModeSwitch.checked) {
                     enableDarkMode();
                 } else {
