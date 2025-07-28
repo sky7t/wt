@@ -206,7 +206,11 @@
         const JSONBIN_MASTER_KEY = '__API_KEY__'; 
         const JSONBIN_BIN_ID = '688755047b4b8670d8a886a8'; 
         const JSONBIN_URL = `https://api.jsonbin.io/v3/b/${JSONBIN_BIN_ID}`;
-         console.log("Using API key:", JSONBIN_MASTER_KEY);
+        console.log("Using API key length:", JSONBIN_MASTER_KEY.length); // Check length
+        console.log("Using API key (raw):", JSONBIN_MASTER_KEY); // Original
+        console.log("Using API key (JSON stringify):", JSON.stringify(JSONBIN_MASTER_KEY)); // Good for seeing hidden chars
+        console.log("Using API key (slice 0-5):", JSONBIN_MASTER_KEY.slice(0, 5)); // Check start
+        console.log("Using API key (slice -5):", JSONBIN_MASTER_KEY.slice(-5)); // Check end
 
         function getWorkoutDataFromPage() {
             const workoutData = { upperBody: [], lowerBody: [] };
