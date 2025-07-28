@@ -226,7 +226,7 @@
 
         function checkApiKeysConfiguration() {
             const warningElement = document.getElementById('apiKeyWarning');
-            if (JSONBIN_MASTER_KEY === '__API_KEY__' || JSONBIN_BIN_ID === '688755047b4b8670d8a886a8') {
+            if (JSONBIN_MASTER_KEY === 'JSONBIN_MASTER_KEY' || JSONBIN_BIN_ID === 'JSONBIN_BIN_ID') {
                 areApiKeysConfigured = false;
                 warningElement.style.display = 'block'; // Show the warning
                 console.warn("JSONBin.com API Warning: Please update JSONBIN_MASTER_KEY and JSONBIN_BIN_ID in the script to enable cloud sync. Current values are placeholders.");
